@@ -2,9 +2,16 @@
 
 `paperless-alfred-go` is a workflow for searching paperless documents via Alfred and opening them in your browser.
 
-The trigger keyword is `ppl` and it expects a document search string ([documentation here](https://docs.paperless-ngx.com/usage/#document-searches)).
+![Alfred preview of the workflow, featuring a complex search](./assets/preview.png)
 
 The workflow fully supports the French alphabet, including accents. I suppose (without having tested) that it will support other alphabets just fine.
+
+## Usage
+
+The trigger keyword is `ppl` and it expects a document search string ([documentation here](https://docs.paperless-ngx.com/usage/#document-searches)).
+
+If no document is found, the only result opens your search in the web UI so you can continue from there.
+You can also trigger this on any file with the `Cmd` modifier.
 
 ## Installation
 
