@@ -104,7 +104,9 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Search files on your paperless instance and open them in your browser using this workflow. See https://github.com/Crocmagnon/paperless-alfred-go for the most up-to-date instructions.</string>
+	<string>Search files on your paperless instance and open them in your browser using this workflow. See [GitHub](https://github.com/Crocmagnon/paperless-alfred-go) for the most up-to-date instructions.
+
+Instructions to retrieve your API token are available [on the Paperless documentation](https://docs.paperless-ngx.com/api/#authorization) (3. Token authentication).</string>
 	<key>uidata</key>
 	<dict>
 		<key>3616F71E-A4C1-478D-BAE9-3DD2122AB986</key>
@@ -158,7 +160,7 @@
 				<true/>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Your Paperless token.</string>
 			<key>label</key>
 			<string>Paperless token</string>
 			<key>type</key>

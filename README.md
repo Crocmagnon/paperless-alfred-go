@@ -37,6 +37,12 @@ See [Apple's instructions](https://support.apple.com/en-us/guide/mac-help/mh4061
 * `make install` - this will open Alfred to import the workflow
 * Configure the workflow in Alfred
 
+## Configuration
+
+Configuration is handled in Alfred's wizard.
+
+Instructions to retrieve your API token are available [on the Paperless documentation](https://docs.paperless-ngx.com/api/#authorization) (3. Token authentication).
+
 ## A bit of context
 
 I was looking for a paperless search workflow.

@@ -3,7 +3,7 @@ set -euxo pipefail
 mkdir -p dist/workflow
 cp dist/ppl-go dist/workflow/
 cp -r alfred-workflow/ dist/workflow/
-version="$(git describe --tags --always)"
+version="$(git describe --tags --always | sed 's/v//')"
 sed -i '' "s/<string>0.0.1<\/string>/<string>$version<\/string>/" dist/workflow/info.plist
 pushd dist/workflow
 zip -r ../paperless-alfred-go.alfredworkflow .
