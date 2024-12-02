@@ -1,0 +1,39 @@
+name: Release
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: Build Alfred workflow
+        run: make workflow
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow
+          path: dist/*
+      - name: Check GoReleaser config
+        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          args: check
+      - name: Run GoReleaser
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

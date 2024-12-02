@@ -1,0 +1,12 @@
+version: 2
+
+dist: "goreleaser-dist"
+
+builds:
+  - skip: true
+
+release:
+  extra_files:
+    - glob: ./dist/paperless-alfred-go.alfredworkflow
+    - glob: ./dist/ppl-go
+  draft: true
