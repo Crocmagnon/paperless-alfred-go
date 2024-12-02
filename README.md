@@ -57,3 +57,17 @@ Unfortunately, this workflow presented several issues for my use case:
 The workflow was also quite complex, downloading files before opening them locally.
 
 I needed something simpler, so I wrote my own.
+
+## Development
+
+Install from sources:
+```shell
+make clean install
+```
+
+Release:
+```shell
+VERSION=v0.3.0
+git tag -a $VERSION -m $VERSION
+git push --follow-tags  # goreleaser will publish a release
+```
