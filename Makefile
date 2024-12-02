@@ -8,5 +8,8 @@ build:
 workflow: build
 	./scripts/make-workflow
 
+install: workflow
+	open dist/paperless-alfred-go.alfredworkflow
+
 clean:
 	rm -rf dist

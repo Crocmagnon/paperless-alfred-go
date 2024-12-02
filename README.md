@@ -34,9 +34,8 @@ Apple's instructions on how to bypass this protection are available [here](https
 
 * [Download and install Go](https://go.dev/doc/install) version >= 1.23
 * Clone this repository
-* `make workflow`
-* Open `dist/paperless-alfred-go.alfredworkflow`
-
+* `make install` - this will open Alfred to import the workflow
+* Configure the workflow in Alfred
 
 ## A bit of context
 
