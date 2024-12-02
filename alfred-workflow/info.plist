@@ -104,7 +104,7 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string></string>
+	<string>Search files on your paperless instance and open them in your browser using this workflow.</string>
 	<key>uidata</key>
 	<dict>
 		<key>3616F71E-A4C1-478D-BAE9-3DD2122AB986</key>
