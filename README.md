@@ -8,7 +8,7 @@ The workflow fully supports the French alphabet, including accents. I suppose (w
 
 ## Usage
 
-The trigger keyword is `ppl` and it expects a document search string ([documentation here](https://docs.paperless-ngx.com/usage/#document-searches)).
+The trigger keyword is `ppl` and it expects a [document search string](https://docs.paperless-ngx.com/usage/#document-searches).
 
 If no document is found, the only result opens your search in the web UI so you can continue from there.
 You can also trigger this on any file with the `Cmd` modifier.
@@ -28,7 +28,7 @@ After installing this workflow, you'll need to run it a first time. macOS will c
 > [!NOTE]
 > It may be the first time you see this warning. Don't panic, I'm not trying to steal your data. I just don't have $99/yr to spend on this.
 
-Apple's instructions on how to bypass this protection are available [here](https://support.apple.com/en-us/guide/mac-help/mh40616/mac).
+See [Apple's instructions](https://support.apple.com/en-us/guide/mac-help/mh40616/mac) on how to bypass this protection.
 
 ### From sources
 
