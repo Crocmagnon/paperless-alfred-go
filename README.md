@@ -16,7 +16,7 @@ After installing this workflow, you'll need to run it a first time. macOS will c
 
 ![macOS Gatekeeper window](./assets/gatekeeper.png)
 
-This is expected, as the code of this workflow is written in Go and compiled into a binary. I don't have $99/year to spend on an Apple Developer account just for this project, so you see this popup.
+**This is expected**, as the code of this workflow is written in Go and compiled into a binary. I don't have $99/year to spend on an Apple Developer account just for this project, so you see this popup.
 
 > [!NOTE]
 > It may be the first time you see this warning. Don't panic, I'm not trying to steal your data. I just don't have $99/yr to spend on this.
@@ -25,7 +25,7 @@ Apple's instructions on how to bypass this protection are available [here](https
 
 ### From sources
 
-* Download and install Go (https://go.dev/doc/install), version >= 1.23
+* [Download and install Go](https://go.dev/doc/install) version >= 1.23
 * Clone this repository
 * `make workflow`
 * Open `dist/paperless-alfred-go.alfredworkflow`
