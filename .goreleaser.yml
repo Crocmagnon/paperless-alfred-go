@@ -9,4 +9,3 @@ release:
   extra_files:
     - glob: ./dist/paperless-alfred-go.alfredworkflow
     - glob: ./dist/ppl-go
-  draft: true
