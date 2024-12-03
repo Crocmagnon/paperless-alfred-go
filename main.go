@@ -9,6 +9,7 @@ import (
 	"golang.org/x/text/unicode/norm"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -69,11 +70,14 @@ func paperlessToAlfred(
 ) []alfred.Item {
 	var items []alfred.Item
 
+	encodedQuery := url.Values{"query": []string{query}}.Encode()
+
 	if len(results) == 0 {
 		items = append(items, alfred.Item{
-			Title:    "No result found",
-			Arg:      fmt.Sprintf("%s/documents?query=%s", baseURL, query),
-			Subtitle: "Open search in Paperless",
+			UID:      "paperless:open-search",
+			Title:    "Open search in Paperless",
+			Arg:      fmt.Sprintf("%s/documents?%s", baseURL, encodedQuery),
+			Subtitle: fmt.Sprintf("Search for %q in Paperless", query),
 		})
 
 		return items
@@ -91,8 +95,8 @@ func paperlessToAlfred(
 			},
 			Mods: map[string]alfred.Mod{
 				"cmd": {
-					Arg:      fmt.Sprintf("%s/documents?query=%s", baseURL, query),
-					Subtitle: "Open search in Paperless",
+					Arg:      fmt.Sprintf("%s/documents?%s", baseURL, encodedQuery),
+					Subtitle: fmt.Sprintf("Open search for %q in Paperless", query),
 				},
 			},
 		})

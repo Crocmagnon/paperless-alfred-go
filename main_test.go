@@ -60,7 +60,7 @@ func Test_run(t *testing.T) {
 						Arg:      "http://localhost:1234/documents/12/details",
 						Icon:     &alfred.Icon{Type: "filetype", Path: "com.adobe.pdf"},
 						Mods: map[string]alfred.Mod{
-							"cmd": {Arg: "http://localhost:1234/documents?query=simple", Subtitle: "Open search in Paperless"},
+							"cmd": {Arg: "http://localhost:1234/documents?query=simple", Subtitle: `Open search for "simple" in Paperless`},
 						},
 					},
 				},
@@ -135,7 +135,7 @@ func Test_run(t *testing.T) {
 						Arg:      "http://localhost:1234/documents/11/details",
 						Icon:     &alfred.Icon{Type: "filetype", Path: "com.adobe.pdf"},
 						Mods: map[string]alfred.Mod{
-							"cmd": {Arg: "http://localhost:1234/documents?query=complex querÿ", Subtitle: "Open search in Paperless"},
+							"cmd": {Arg: "http://localhost:1234/documents?query=complex+quer%C3%BF", Subtitle: `Open search for "complex querÿ" in Paperless`},
 						},
 					},
 					{
@@ -145,7 +145,7 @@ func Test_run(t *testing.T) {
 						Arg:      "http://localhost:1234/documents/12/details",
 						Icon:     &alfred.Icon{Type: "filetype", Path: "com.adobe.pdf"},
 						Mods: map[string]alfred.Mod{
-							"cmd": {Arg: "http://localhost:1234/documents?query=complex querÿ", Subtitle: "Open search in Paperless"},
+							"cmd": {Arg: "http://localhost:1234/documents?query=complex+quer%C3%BF", Subtitle: `Open search for "complex querÿ" in Paperless`},
 						},
 					},
 				},
