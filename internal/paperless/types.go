@@ -5,12 +5,19 @@ import (
 	"time"
 )
 
-type SearchResponse struct {
-	PaginationEnvelope
-	Results []Result `json:"results"`
+type PaginationEnvelope struct {
+	Count    int     `json:"count"`
+	Next     *string `json:"next"`
+	Previous *string `json:"previous"`
+	All      []int   `json:"all"`
 }
 
-type Result struct {
+type PageResponse[T any] struct {
+	PaginationEnvelope
+	Results []T `json:"results"`
+}
+
+type DocumentSearch struct {
 	Id                  int           `json:"id"`
 	Correspondent       *int          `json:"correspondent"`
 	DocumentType        *int          `json:"document_type"`
@@ -35,56 +42,60 @@ type Result struct {
 	SearchHit           SearchHit     `json:"__search_hit__"`
 }
 
-func (r Result) Metadata(correspondents map[int]Correspondent, docTypes map[int]DocumentType) []string {
+func (d DocumentSearch) GetID() int {
+	return d.Id
+}
+
+func (d DocumentSearch) Metadata(correspondents map[int]Correspondent, docTypes map[int]DocumentType) []string {
 	meta := make([]string, 0, 4)
 
-	meta = append(meta, r.CreatedDate)
+	meta = append(meta, d.CreatedDate)
 
-	if docType := r.DocumentTypeName(docTypes); docType != "" {
+	if docType := d.DocumentTypeName(docTypes); docType != "" {
 		meta = append(meta, docType)
 	}
 
-	if corr := r.CorrespondentName(correspondents); corr != "" {
+	if corr := d.CorrespondentName(correspondents); corr != "" {
 		meta = append(meta, corr)
 	}
 
-	if asn := r.ASN(); asn != "" {
+	if asn := d.ASN(); asn != "" {
 		meta = append(meta, asn)
 	}
 
 	return meta
 }
 
-func (r Result) ASN() string {
-	if r.ArchiveSerialNumber == nil {
+func (d DocumentSearch) ASN() string {
+	if d.ArchiveSerialNumber == nil {
 		return ""
 	}
 
-	return fmt.Sprintf("ASN %d", *r.ArchiveSerialNumber)
+	return fmt.Sprintf("ASN %d", *d.ArchiveSerialNumber)
 }
 
-func (r Result) DetailsURL(baseURL string) string {
-	return fmt.Sprintf("%s/documents/%v/details", baseURL, r.Id)
+func (d DocumentSearch) DetailsURL(baseURL string) string {
+	return fmt.Sprintf("%s/documents/%v/details", baseURL, d.Id)
 }
 
-func (r Result) CorrespondentName(correspondents map[int]Correspondent) string {
-	if r.Correspondent == nil {
+func (d DocumentSearch) CorrespondentName(correspondents map[int]Correspondent) string {
+	if d.Correspondent == nil {
 		return ""
 	}
 
-	if corr, ok := correspondents[*r.Correspondent]; ok {
+	if corr, ok := correspondents[*d.Correspondent]; ok {
 		return corr.Name
 	}
 
 	return ""
 }
 
-func (r Result) DocumentTypeName(documentTypes map[int]DocumentType) string {
-	if r.DocumentType == nil {
+func (d DocumentSearch) DocumentTypeName(documentTypes map[int]DocumentType) string {
+	if d.DocumentType == nil {
 		return ""
 	}
 
-	if docType, ok := documentTypes[*r.DocumentType]; ok {
+	if docType, ok := documentTypes[*d.DocumentType]; ok {
 		return docType.Name
 	}
 
@@ -96,18 +107,6 @@ type SearchHit struct {
 	Highlights     string  `json:"highlights"`
 	NoteHighlights string  `json:"note_highlights"`
 	Rank           int     `json:"rank"`
-}
-
-type PaginationEnvelope struct {
-	Count    int     `json:"count"`
-	Next     *string `json:"next"`
-	Previous *string `json:"previous"`
-	All      []int   `json:"all"`
-}
-
-type CorrespondentsResponse struct {
-	PaginationEnvelope
-	Results []Correspondent `json:"results"`
 }
 
 type Correspondent struct {
@@ -122,9 +121,8 @@ type Correspondent struct {
 	UserCanChange     bool   `json:"user_can_change"`
 }
 
-type DocumentTypesResponse struct {
-	PaginationEnvelope
-	Results []DocumentType `json:"results"`
+func (c Correspondent) GetID() int {
+	return c.Id
 }
 
 type DocumentType struct {
@@ -137,4 +135,8 @@ type DocumentType struct {
 	DocumentCount     int    `json:"document_count"`
 	Owner             int    `json:"owner"`
 	UserCanChange     bool   `json:"user_can_change"`
+}
+
+func (dt DocumentType) GetID() int {
+	return dt.Id
 }

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Crocmagnon/paperless-alfred-go/internal/alfred"
 	"github.com/Crocmagnon/paperless-alfred-go/internal/paperless"
-	"github.com/carlmjohnson/requests"
 	"golang.org/x/text/unicode/norm"
 	"io"
 	"net/http"
@@ -35,17 +34,17 @@ func run(ctx context.Context, args []string, stdout io.Writer, httpClient *http.
 		return fmt.Errorf("no query specified")
 	}
 
-	res, err := search(ctx, httpClient, baseURL, token, query)
+	res, err := paperless.Search(ctx, httpClient, baseURL, token, query)
 	if err != nil {
 		return err
 	}
 
-	correspondents, err := getCorrespondents(ctx, httpClient, baseURL, token)
+	correspondents, err := paperless.GetCorrespondents(ctx, httpClient, baseURL, token)
 	if err != nil {
 		return err
 	}
 
-	docTypes, err := getDocTypes(ctx, httpClient, baseURL, token)
+	docTypes, err := paperless.GetDocTypes(ctx, httpClient, baseURL, token)
 	if err != nil {
 		return err
 	}
@@ -62,99 +61,8 @@ func run(ctx context.Context, args []string, stdout io.Writer, httpClient *http.
 	return nil
 }
 
-func search(ctx context.Context, client *http.Client, baseURL, token, query string) ([]paperless.Result, error) {
-	var resp paperless.SearchResponse
-
-	err := requests.URL(baseURL).
-		Client(client).
-		Path("/api/documents/").
-		Header("Authorization", "Token "+token).
-		Param("query", query).
-		ToJSON(&resp).
-		Fetch(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("querying documents with %q: %w", query, err)
-	}
-
-	return resp.Results, nil
-}
-
-func getCorrespondents(ctx context.Context, client *http.Client, baseURL, token string) (map[int]paperless.Correspondent, error) {
-	var resp paperless.CorrespondentsResponse
-
-	corr := make(map[int]paperless.Correspondent)
-
-	err := requests.URL(baseURL).
-		Client(client).
-		Path("/api/correspondents/").
-		Header("Authorization", "Token "+token).
-		ToJSON(&resp).
-		Fetch(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("fetching correspondents: %w", err)
-	}
-
-	for _, res := range resp.Results {
-		corr[res.Id] = res
-	}
-
-	for resp.Next != nil {
-		err := requests.URL(*resp.Next).
-			Client(client).
-			Header("Authorization", "Token "+token).
-			ToJSON(&resp).
-			Fetch(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("fetching correspondents: %w", err)
-		}
-
-		for _, res := range resp.Results {
-			corr[res.Id] = res
-		}
-	}
-
-	return corr, nil
-}
-
-func getDocTypes(ctx context.Context, client *http.Client, baseURL, token string) (map[int]paperless.DocumentType, error) {
-	var resp paperless.DocumentTypesResponse
-
-	types := make(map[int]paperless.DocumentType)
-
-	err := requests.URL(baseURL).
-		Client(client).
-		Path("/api/document_types/").
-		Header("Authorization", "Token "+token).
-		ToJSON(&resp).
-		Fetch(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("fetching doc types: %w", err)
-	}
-
-	for _, res := range resp.Results {
-		types[res.Id] = res
-	}
-
-	for resp.Next != nil {
-		err := requests.URL(*resp.Next).
-			Client(client).
-			Header("Authorization", "Token "+token).
-			ToJSON(&resp).
-			Fetch(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("fetching doc types: %w", err)
-		}
-
-		for _, res := range resp.Results {
-			types[res.Id] = res
-		}
-	}
-
-	return types, nil
-}
-
 func paperlessToAlfred(
-	results []paperless.Result,
+	results []paperless.DocumentSearch,
 	baseURL, query string,
 	correspondents map[int]paperless.Correspondent,
 	docTypes map[int]paperless.DocumentType,
