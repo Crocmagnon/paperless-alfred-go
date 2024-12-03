@@ -44,7 +44,12 @@ func run(ctx context.Context, args []string, stdout io.Writer) error {
 		return err
 	}
 
-	alfredItems := paperlessToAlfred(res, baseURL, query, correspondents)
+	docTypes, err := getDocTypes(ctx, baseURL, token)
+	if err != nil {
+		return err
+	}
+
+	alfredItems := paperlessToAlfred(res, baseURL, query, correspondents, docTypes)
 
 	out, err := json.Marshal(alfred.Result{Items: alfredItems})
 	if err != nil {
@@ -107,7 +112,47 @@ func getCorrespondents(ctx context.Context, baseURL, token string) (map[int]pape
 	return corr, nil
 }
 
-func paperlessToAlfred(results []paperless.Result, baseURL, query string, correspondents map[int]paperless.Correspondent) []alfred.Item {
+func getDocTypes(ctx context.Context, baseURL, token string) (map[int]paperless.DocumentType, error) {
+	var resp paperless.DocumentTypesResponse
+
+	types := make(map[int]paperless.DocumentType)
+
+	err := requests.URL(baseURL).
+		Path("/api/document_types/").
+		Header("Authorization", "Token "+token).
+		ToJSON(&resp).
+		Fetch(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("fetching doc types: %w", err)
+	}
+
+	for _, res := range resp.Results {
+		types[res.Id] = res
+	}
+
+	for resp.Next != nil {
+		err := requests.URL(*resp.Next).
+			Header("Authorization", "Token "+token).
+			ToJSON(&resp).
+			Fetch(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("fetching doc types: %w", err)
+		}
+
+		for _, res := range resp.Results {
+			types[res.Id] = res
+		}
+	}
+
+	return types, nil
+}
+
+func paperlessToAlfred(
+	results []paperless.Result,
+	baseURL, query string,
+	correspondents map[int]paperless.Correspondent,
+	docTypes map[int]paperless.DocumentType,
+) []alfred.Item {
 	var items []alfred.Item
 
 	if len(results) == 0 {
@@ -124,7 +169,7 @@ func paperlessToAlfred(results []paperless.Result, baseURL, query string, corres
 		items = append(items, alfred.Item{
 			UID:      result.DetailsURL(baseURL),
 			Title:    result.Title,
-			Subtitle: strings.Join(result.Metadata(correspondents), " - "),
+			Subtitle: strings.Join(result.Metadata(correspondents, docTypes), " - "),
 			Arg:      result.DetailsURL(baseURL),
 			Icon: &alfred.Icon{
 				Type: "filetype",
