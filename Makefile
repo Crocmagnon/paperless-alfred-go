@@ -1,5 +1,9 @@
-.PHONY: build workflow clean
-build:
+.PHONY: test build workflow clean
+
+test:
+	go test ./...
+
+build: test
 	go mod tidy
 	GOOS=darwin GOARCH=amd64 go build -o ./dist/ppl-go-darwin-amd64 ./
 	GOOS=darwin GOARCH=arm64 go build -o ./dist/ppl-go-darwin-arm64 ./

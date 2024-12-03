@@ -54,7 +54,7 @@ Unfortunately, this workflow presented several issues for my use case:
 * multi-word queries were broken
 * queries with French accents were broken
 
-The workflow was also quite complex, downloading files before opening them locally.
+The workflow was also quite complex, downloading files before opening them locally. It also had no tests.
 
 I needed something simpler, so I wrote my own.
 
