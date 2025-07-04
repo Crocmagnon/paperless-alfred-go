@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> I've stopped using macOS so I won't be maintaining this anymore. A fork of this project can be found at https://codeberg.org/paractmol/paperless-alfred-go/.
+
 # paperless-alfred-go
 
 `paperless-alfred-go` is a workflow for searching paperless documents via Alfred and opening them in your browser.
